@@ -11,6 +11,8 @@ namespace FileInfoGrabber
 {
     public class Grabber
     {
+        public static bool IsLogEnabled = false;
+
         string _input = AppDomain.CurrentDomain.BaseDirectory;
         string _output = AppDomain.CurrentDomain.BaseDirectory;
         List<string> _extensions = new List<string>();
@@ -35,8 +37,11 @@ namespace FileInfoGrabber
                 text += "all";
             }
 
-            Console.WriteLine(text);
-
+            if (IsLogEnabled)
+            {
+                Console.WriteLine(text);
+            }
+            
             text += "\n\n";
 
             foreach (string filePath in Directory.GetFiles(_input))
@@ -58,29 +63,44 @@ namespace FileInfoGrabber
                     tempText += "\tVersion:\t\t" + FileVersionInfo.GetVersionInfo(filePath).FileVersion + "\n";
                     tempText += "\tCreationTime:\t" + fileInfo.CreationTime.ToString("dd/MM/yyyy HH:mm:ss");
 
-                    Console.WriteLine(tempText);
+                    if (IsLogEnabled)
+                    {
+                        Console.WriteLine(tempText);
+                    }
 
                     text += tempText + "\n\n";
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Сouldn`t get file information! File ignored: " + filePath);
+                    if (IsLogEnabled)
+                    {
+                        Console.WriteLine("Сouldn`t get file information! File ignored: " + filePath);
+                    }
                     continue;
                 }
             }
 
-            Console.WriteLine();
+            if (IsLogEnabled)
+            {
+                Console.WriteLine();
+            }
 
             try
             {
                 File.WriteAllText(_output, text);
-                Console.WriteLine("Saved to file: " + _output);
+                if (IsLogEnabled)
+                {
+                    Console.WriteLine("Saved to file: " + _output);
+                }
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error saving file: " + _output + "\n");
-                Console.WriteLine(ex.Message);
+                if (IsLogEnabled)
+                {
+                    Console.WriteLine("Error saving file: " + _output + "\n");
+                    Console.WriteLine(ex.Message);
+                }
                 return false;
             }
         }
@@ -153,7 +173,10 @@ namespace FileInfoGrabber
         {
             if (!Directory.Exists(_input))
             {
-                Console.WriteLine("Cannot find input directory: " + _input);
+                if (IsLogEnabled)
+                {
+                    Console.WriteLine("Cannot find input directory: " + _input);
+                }
                 return false;
             }
 
@@ -172,7 +195,10 @@ namespace FileInfoGrabber
 
             if (_isCustomExtension && _extensions?.Any() != true)
             {
-                Console.WriteLine("Empty extensions list!" + _output);
+                if (IsLogEnabled)
+                {
+                    Console.WriteLine("Empty extensions list!" + _output);
+                }
                 return false;
             }
 
