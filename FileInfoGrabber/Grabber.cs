@@ -18,7 +18,7 @@ namespace FileInfoGrabber
         List<string> _extensions = new List<string>();
         bool _isCustomExtension = false;
 
-        public bool Grab(string[] args)
+        public bool Grab(string[]? args)
         {
             ParseArgs(args);
             if (!CheckArgs())
@@ -70,7 +70,7 @@ namespace FileInfoGrabber
 
                     text += tempText + "\n\n";
                 }
-                catch (Exception ex)
+                catch
                 {
                     if (IsLogEnabled)
                     {
@@ -105,7 +105,7 @@ namespace FileInfoGrabber
             }
         }
 
-        private void ParseArgs(string[] args)
+        private void ParseArgs(string[]? args)
         {
             if (args?.Any() != true)
             {
